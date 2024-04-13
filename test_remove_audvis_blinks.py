@@ -32,5 +32,5 @@ data_directory = './AudVisData/'
 
 # Load subject data
 data = rmv.load_data(data_directory,['Fpz','Cz','Iz'])
-#data = rmv.load_data(data_directory)
+
 

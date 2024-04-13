@@ -51,8 +51,22 @@ def load_data(data_directory,channels_to_plot=None):
 #    data_dict = np.load(data_file,allow_pickle=True)
 
     if channels_to_plot: 
-        pass
+        eeg=data_dict['eeg']
+        channels=data_dict['channels']
+        fs=data_dict['fs']
+        eeg_time=np.arange(0,len(eeg[0])*1/fs,1/fs)
+        units=data_dict['units']
+        plot_count=len(channels_to_plot)
+        fig,axs=plt.subplots(nrows=plot_count,ncols=1,sharex=True)
+        fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
+ 
+        for channel_index,channel_name in enumerate(channels_to_plot):
+            axs[channel_index].plot(eeg_time,np.squeeze(eeg[channels==channel_name]),label=channel_name)
+            axs[channel_index].set_xlabel('Eeg time (s)')
+            axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n ({units})')
     
+        plt.tight_layout()    
+        plt.show()
     
     return data_dict
 
