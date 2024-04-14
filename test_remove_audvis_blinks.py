@@ -34,3 +34,13 @@ data_directory = './AudVisData/'
 data = rmv.load_data(data_directory,['Fpz','Cz','Iz'])
 
 
+#%%
+# Part 2 Plot ICA Components
+mixing_matrix=data['mixing_matrix']
+eeg=data['eeg']
+channels=data['channels']
+components_to_plot=[0,1,2,3,4,5,6,7,8,29]
+
+# something is not righ in the lab5 instructions. assuming for now that mixing_matrix argument
+# is in fact eeg raw data 
+rmv.plot_components(eeg,channels,components_to_plot) 
