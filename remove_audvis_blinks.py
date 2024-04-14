@@ -24,7 +24,7 @@ import plot_topo
 
 
 
-def load_data(data_directory,channels_to_plot=None):
+def load_data(data_directory, channels_to_plot=None):
     '''
     This function loads audiovis data and stores it in a dictionary for easy 
     access.
@@ -58,33 +58,42 @@ def load_data(data_directory,channels_to_plot=None):
         eeg_time=np.arange(0,len(eeg[0])*1/fs,1/fs)
         units=data_dict['units']
         plot_count=len(channels_to_plot)
-        fig,axs=plt.subplots(nrows=plot_count,ncols=1,sharex=True)
+        fig,axs=plt.subplots(nrows=plot_count, ncols=1, sharex=True)
         fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
  
         for channel_index,channel_name in enumerate(channels_to_plot):
             axs[channel_index].plot(eeg_time,np.squeeze(eeg[channels==channel_name]),label=channel_name)
             axs[channel_index].set_xlabel('Eeg time (s)')
             axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n ({units})')
+            axs[channel_index].set_xlim(54,61)
     
         plt.tight_layout()    
-        plt.show()
+        # plt.show()
     
     return data_dict
 
-def plot_components(eeg,channels,components_to_plot):
+def plot_components(mixing_matrix, channels, components_to_plot):
     
-    plot_count=len(components_to_plot)
-    plt.figure()
-    for component_index,component_value in enumerate(components_to_plot):
-        if plot_count<=5:
-            subplot(1,5,component_index+1)
-            my_component=eeg[:,component_value]
-            plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
-        if plot_count<=10:
-            subplot(2,5,component_index+1)
-            my_component=eeg[:,component_value]
-            plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
-    plt.tight_layout()
+    plot_count = len(components_to_plot)
+    
+    for component_index, component_value in enumerate(components_to_plot):
+        
+        if plot_count <= 5:
+            my_component = mixing_matrix[:,component_value]
+            img, cbar = plot_topo.plot_topo(channel_names=channels, channel_data=my_component,
+                                title=f'ICA component {component_index}', cbar_label='', montage_name='standard_1005')
+            plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
+            
+        if plot_count <= 10:
+            
+            plt.subplot()
+            my_component = mixing_matrix[:,component_value]
+         
+            img, cbar = plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component,
+                                title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
+            plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
+            
+    
     
     
     
