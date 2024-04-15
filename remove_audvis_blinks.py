@@ -71,18 +71,18 @@ def load_data(data_directory,channels_to_plot=None):
     
     return data_dict
 
-def plot_components(eeg,channels,components_to_plot):
+def plot_components(mixing_matrix,channels,components_to_plot):
     
     plot_count=len(components_to_plot)
     plt.figure()
     for component_index,component_value in enumerate(components_to_plot):
         if plot_count<=5:
             subplot(1,5,component_index+1)
-            my_component=eeg[:,component_value]
+            my_component=mixing_matrix[:,component_value]
             plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
         if plot_count<=10:
             subplot(2,5,component_index+1)
-            my_component=eeg[:,component_value]
+            my_component=mixing_matrix[:,component_value]
             plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
     plt.tight_layout()
     
