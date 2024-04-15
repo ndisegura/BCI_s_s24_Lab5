@@ -47,12 +47,12 @@ components_to_plot = [0,1,2,3,4,5,6,7,8,29]
 rmv.plot_components(mixing_matrix,channels,components_to_plot) 
 
 # Part 3 - Source Activity
-sources_to_plot = [0,3,9]
+sources_to_plot = [0, 3, 9]
 source_activations = rmv.get_sources(eeg, unmixing_matrix, fs, sources_to_plot)
 
 # Part 4 - Remove Sources. Make two calls. One to clean-out sources identified and one without.
-# TODO: Need to decide what sources should be removed
-sources_to_remove = [0,9]
+# Sources to be removed 1 -> Fpz, 29 -> Cz
+sources_to_remove = [1, 29]
 cleaned_eeg = rmv.remove_sources(source_activations, mixing_matrix, sources_to_remove)
 
 sources_to_remove = []

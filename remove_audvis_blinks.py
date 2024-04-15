@@ -135,7 +135,25 @@ def remove_sources(source_activations, mixing_matrix, sources_to_remove):
 
 # Part 5 - Compare reconstructions
 def compare_reconstructions(eeg, reconstructed_eeg, cleaned_eeg, fs, channels, channels_to_plot):
-    pass
+    
+    eeg_time = np.arange(0,len(eeg[0])*1/fs,1/fs)
+    
+    plot_count = len(channels_to_plot)
+    fig,axs = plt.subplots(nrows=plot_count, ncols=1, sharex=True)
+    fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
+
+    for channel_index, channel_name in enumerate(channels_to_plot):
+        axs[channel_index].plot(eeg_time, np.squeeze(eeg[channels==channel_name]), label='raw', color='blue')
+        axs[channel_index].plot(eeg_time, np.squeeze(reconstructed_eeg[channels==channel_name]), label='reconstructed', color='green')
+        axs[channel_index].plot(eeg_time, np.squeeze(cleaned_eeg[channels==channel_name]), label='cleaned', color='red')
+        axs[channel_index].set_xlabel('Eeg time (s)')
+        axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n (uV)')
+        axs[channel_index].set_xlim(54,61)
+        axs[channel_index].legend()
+        
+    plt.tight_layout()
+    plt.savefig(f"plots/comparison_eeg.png")
+
         
     
     
