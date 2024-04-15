@@ -62,13 +62,13 @@ def load_data(data_directory, channels_to_plot=None):
         fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
  
         for channel_index,channel_name in enumerate(channels_to_plot):
-            axs[channel_index].plot(eeg_time,np.squeeze(eeg[channels==channel_name]),label=channel_name)
+            axs[channel_index].plot(eeg_time, np.squeeze(eeg[channels==channel_name]),label=channel_name)
             axs[channel_index].set_xlabel('Eeg time (s)')
             axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n ({units})')
             axs[channel_index].set_xlim(54,61)
     
-        plt.tight_layout()    
-        # plt.show()
+        # plt.tight_layout()  
+        plt.savefig(f"plots/Raw_AudioVis.png")  
     
     return data_dict
 
@@ -79,6 +79,7 @@ def plot_components(mixing_matrix, channels, components_to_plot):
     for component_index, component_value in enumerate(components_to_plot):
         
         if plot_count <= 5:
+            subplot(1,5,component_index+1)
             my_component = mixing_matrix[:,component_value]
             img, cbar = plot_topo.plot_topo(channel_names=channels, channel_data=my_component,
                                 title=f'ICA component {component_index}', cbar_label='', montage_name='standard_1005')
@@ -86,16 +87,32 @@ def plot_components(mixing_matrix, channels, components_to_plot):
             
         if plot_count <= 10:
             
-            plt.subplot()
-            my_component = mixing_matrix[:,component_value]
-         
-            img, cbar = plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component,
-                                title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
+            subplot(2, 5, component_index+1)
+            my_component=mixing_matrix[:,component_value]
+            plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
             plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
             
     
+def get_sources(eeg, unmixing_data, fs, sources_to_plot):
     
+    source_activity = np.matmul(eeg, unmixing_data)
     
+    if sources_to_plot:
+        plot_count=len(sources_to_plot)
+        fig,axs=plt.subplots(nrows=plot_count,ncols=1,sharex=True)
+        fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
+        
+        for channel_index, channel_name in enumerate(sources_to_plot):
+            axs[channel_index].plot(source_activity, fs,label=channel_name)
+            axs[channel_index].set_xlabel('Eeg time (s)')
+            axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n')
+            axs[channel_index].set_xlim(54, 61)
+    
+        plt.tight_layout()    
+        plt.show()
+        
+    return source_activity
+        
     
     
     

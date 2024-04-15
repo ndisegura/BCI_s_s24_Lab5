@@ -29,12 +29,13 @@ data_directory = './AudVisData/'
 #%%
 # Part1: Import the data
 # Load subject data
-data = rmv.load_data(data_directory,['Fpz','Cz','Iz'])
+channels_to_plot = ['Fpz','Cz','Iz']
+data = rmv.load_data(data_directory, channels_to_plot)
 
 #%%
 # Part 2 Plot ICA Components
-mixing_matrix = data['mixing_matrix']
 eeg = data['eeg']
+fs = data['fs']
 channels = data['channels']
 unmixing_matrix = data['unmixing_matrix']
 mixing_matrix = data['mixing_matrix']
@@ -43,4 +44,7 @@ components_to_plot = [0,1,2,3,4,5,6,7,8,29]
 
 # something is not righ in the lab5 instructions. assuming for now that mixing_matrix argument
 # is in fact eeg raw data 
-rmv.plot_components(mixing_matrix, channels, components_to_plot) 
+rmv.plot_components(mixing_matrix,channels,components_to_plot) 
+
+# Part 3 - Source Activity
+# rmv.get_sources(eeg, unmixing_matrix, fs, channels_to_plot)
