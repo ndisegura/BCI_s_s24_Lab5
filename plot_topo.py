@@ -69,7 +69,7 @@ def plot_topo(channel_names=[], channel_data=[],title='',cbar_label='Voltage (uV
     plt.cla()
     
     # Plot topomap on current axes
-    im,_ = mne.viz.plot_topomap(fake_evoked.data[:, 0], fake_evoked.info, show=False, size=6)
+    im,_ = mne.viz.plot_topomap(fake_evoked.data[:, 0], fake_evoked.info, show=False, axes=plt.gca(), size=20)
     # Annotate plot
     
     plt.title(title)

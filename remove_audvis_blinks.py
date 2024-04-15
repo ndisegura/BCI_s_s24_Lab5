@@ -67,7 +67,7 @@ def load_data(data_directory, channels_to_plot=None):
             axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n ({units})')
             axs[channel_index].set_xlim(54,61)
     
-        # plt.tight_layout()  
+        plt.tight_layout()  
         plt.savefig(f"plots/Raw_AudioVis.png")  
     
     return data_dict
@@ -75,7 +75,7 @@ def load_data(data_directory, channels_to_plot=None):
 def plot_components(mixing_matrix, channels, components_to_plot):
     
     plot_count = len(components_to_plot)
-    
+    plt.figure(figsize=(15, 8))
     for component_index, component_value in enumerate(components_to_plot):
         
         if plot_count <= 5:
@@ -83,15 +83,19 @@ def plot_components(mixing_matrix, channels, components_to_plot):
             my_component = mixing_matrix[:,component_value]
             img, cbar = plot_topo.plot_topo(channel_names=channels, channel_data=my_component,
                                 title=f'ICA component {component_index}', cbar_label='', montage_name='standard_1005')
-            plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
+            # plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
             
         if plot_count <= 10:
             
             subplot(2, 5, component_index+1)
             my_component=mixing_matrix[:,component_value]
             plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
-            plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
-            
+            # plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
+    
+    plt.tight_layout()
+    plt.savefig(f"plots/components_scalp.png")
+    plt.close()
+    
 # Part 3
 def get_sources(eeg, unmixing_data, fs, sources_to_plot):
     
@@ -111,7 +115,8 @@ def get_sources(eeg, unmixing_data, fs, sources_to_plot):
             axs[channel_index].set_xlim(54, 61)
     
         plt.tight_layout()    
-        plt.savefig(f"plots/test.png")
+        plt.savefig(f"plots/AudioVis_EEG_Data_Source_Space.png")
+        plt.close()
         
     return source_activity
         
