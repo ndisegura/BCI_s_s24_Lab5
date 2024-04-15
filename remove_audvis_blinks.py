@@ -107,11 +107,11 @@ def get_sources(eeg, unmixing_data, fs, sources_to_plot):
         fig.suptitle(' AudioVis EEG Data in ICA Source Space', fontsize=18)
         
         for channel_index, channel_name in enumerate(sources_to_plot):
-            source_activity = np.matmul(eeg.T, unmixing_data)
+            source_activity = np.matmul(unmixing_data, eeg)
             
-            axs[channel_index].plot(eeg_time, source_activity[:, channel_index], label=channel_name)
+            axs[channel_index].plot(eeg_time, source_activity[channel_name, :], label=channel_name)
             axs[channel_index].set_xlabel('Eeg time (s)')
-            axs[channel_index].set_ylabel(f'Voltage on {channel_name} (uV)\n')
+            axs[channel_index].set_ylabel(f'Source {channel_name} (uV)\n')
             axs[channel_index].set_xlim(54, 61)
     
         plt.tight_layout()    
@@ -119,6 +119,8 @@ def get_sources(eeg, unmixing_data, fs, sources_to_plot):
         plt.close()
         
     return source_activity
+
+# Part 4 - 
         
     
     

@@ -47,4 +47,5 @@ components_to_plot = [0,1,2,3,4,5,6,7,8,29]
 rmv.plot_components(mixing_matrix,channels,components_to_plot) 
 
 # Part 3 - Source Activity
-rmv.get_sources(eeg, unmixing_matrix, fs, channels_to_plot)
+sources_to_plot = [0,3,9]
+rmv.get_sources(eeg, unmixing_matrix, fs, sources_to_plot)
