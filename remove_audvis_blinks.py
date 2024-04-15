@@ -92,24 +92,26 @@ def plot_components(mixing_matrix, channels, components_to_plot):
             plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
             plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
             
-    
+# Part 3
 def get_sources(eeg, unmixing_data, fs, sources_to_plot):
     
-    source_activity = np.matmul(eeg, unmixing_data)
-    
+    eeg_time = np.arange(0,len(eeg[0])*1/fs,1/fs)
+
     if sources_to_plot:
         plot_count=len(sources_to_plot)
         fig,axs=plt.subplots(nrows=plot_count,ncols=1,sharex=True)
-        fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
+        fig.suptitle(' AudioVis EEG Data in ICA Source Space', fontsize=18)
         
         for channel_index, channel_name in enumerate(sources_to_plot):
-            axs[channel_index].plot(source_activity, fs,label=channel_name)
+            source_activity = np.matmul(eeg.T, unmixing_data)
+            
+            axs[channel_index].plot(eeg_time, source_activity[:, channel_index], label=channel_name)
             axs[channel_index].set_xlabel('Eeg time (s)')
-            axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n')
+            axs[channel_index].set_ylabel(f'Voltage on {channel_name} (uV)\n')
             axs[channel_index].set_xlim(54, 61)
     
         plt.tight_layout()    
-        plt.show()
+        plt.savefig(f"plots/test.png")
         
     return source_activity
         
