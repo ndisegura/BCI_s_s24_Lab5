@@ -16,10 +16,8 @@ for accuracy and ITRgenerates, and predictor histograms.)
 
 # Import Statements
 from pylab import *
-from scipy.signal import firwin, filtfilt, freqz, hilbert
 import matplotlib.pyplot as plt
 import numpy as np
-import import_ssvep_data as imp
 import plot_topo
 
 
@@ -49,7 +47,6 @@ def load_data(data_directory, channels_to_plot=None):
     
     # Load dictionary
     data_dict = np.load(data_file,allow_pickle=True).item()
-#    data_dict = np.load(data_file,allow_pickle=True)
 
     if channels_to_plot: 
         eeg=data_dict['eeg']
@@ -64,7 +61,7 @@ def load_data(data_directory, channels_to_plot=None):
         for channel_index,channel_name in enumerate(channels_to_plot):
             axs[channel_index].plot(eeg_time, np.squeeze(eeg[channels==channel_name]),label=channel_name)
             axs[channel_index].set_xlabel('Eeg time (s)')
-            axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n ({units})')
+            axs[channel_index].set_ylabel(f'Voltage on {channel_name} ({units})\n')
             axs[channel_index].set_xlim(54,61)
     
         plt.tight_layout()  
@@ -83,14 +80,11 @@ def plot_components(mixing_matrix, channels, components_to_plot):
             my_component = mixing_matrix[:,component_value]
             img, cbar = plot_topo.plot_topo(channel_names=channels, channel_data=my_component,
                                 title=f'ICA component {component_index}', cbar_label='', montage_name='standard_1005')
-            # plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
             
         if plot_count <= 10:
-            
             subplot(2, 5, component_index+1)
             my_component=mixing_matrix[:,component_value]
             plot_topo.plot_topo(channel_names=list(channels), channel_data=my_component, title=f'ICA component {component_index}',cbar_label='', montage_name='standard_1005')
-            # plt.savefig(f"plots/scalp_figures/{component_index}_scalp.png")
     
     plt.tight_layout()
     plt.savefig(f"plots/components_scalp.png")
@@ -140,21 +134,16 @@ def compare_reconstructions(eeg, reconstructed_eeg, cleaned_eeg, fs, channels, c
     
     plot_count = len(channels_to_plot)
     fig,axs = plt.subplots(nrows=plot_count, ncols=1, sharex=True)
-    fig.suptitle(' Raw AudioVis EEG Data ', fontsize=18)
+    fig.suptitle(' AudioVis EEG Data Reconstructed and Clean', fontsize=18)
 
     for channel_index, channel_name in enumerate(channels_to_plot):
         axs[channel_index].plot(eeg_time, np.squeeze(eeg[channels==channel_name]), label='raw', color='blue')
-        axs[channel_index].plot(eeg_time, np.squeeze(reconstructed_eeg[channels==channel_name]), label='reconstructed', color='green')
-        axs[channel_index].plot(eeg_time, np.squeeze(cleaned_eeg[channels==channel_name]), label='cleaned', color='red')
+        axs[channel_index].plot(eeg_time, np.squeeze(reconstructed_eeg[channels==channel_name]), label='reconstructed', color='green', linestyle='dashed')
+        axs[channel_index].plot(eeg_time, np.squeeze(cleaned_eeg[channels==channel_name]), label='cleaned', color='red', linestyle='dotted')
         axs[channel_index].set_xlabel('Eeg time (s)')
-        axs[channel_index].set_ylabel(f'Voltage on {channel_name}\n (uV)')
-        axs[channel_index].set_xlim(54,61)
+        axs[channel_index].set_ylabel(f'Voltage on {channel_name} (uV)\n')
+        axs[channel_index].set_xlim(55,60)
         axs[channel_index].legend()
         
     plt.tight_layout()
     plt.savefig(f"plots/comparison_eeg.png")
-
-        
-    
-    
-    
