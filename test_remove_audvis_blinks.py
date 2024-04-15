@@ -48,4 +48,16 @@ rmv.plot_components(mixing_matrix,channels,components_to_plot)
 
 # Part 3 - Source Activity
 sources_to_plot = [0,3,9]
-rmv.get_sources(eeg, unmixing_matrix, fs, sources_to_plot)
+source_activations = rmv.get_sources(eeg, unmixing_matrix, fs, sources_to_plot)
+
+# Part 4 - Remove Sources. Make two calls. One to clean-out sources identified and one without.
+# TODO: Need to decide what sources should be removed
+sources_to_remove = [0,9]
+cleaned_eeg = rmv.remove_sources(source_activations, mixing_matrix, sources_to_remove)
+
+sources_to_remove = []
+reconstructed_eeg = rmv.remove_sources(source_activations, mixing_matrix, sources_to_remove)
+
+# Part 5 - Compare reconstructions
+rmv.compare_reconstructions(eeg, reconstructed_eeg, cleaned_eeg, fs, channels, channels_to_plot)
+

@@ -100,27 +100,42 @@ def plot_components(mixing_matrix, channels, components_to_plot):
 def get_sources(eeg, unmixing_data, fs, sources_to_plot):
     
     eeg_time = np.arange(0,len(eeg[0])*1/fs,1/fs)
-
+    source_activations = np.matmul(unmixing_data, eeg)
+    
     if sources_to_plot:
         plot_count=len(sources_to_plot)
         fig,axs=plt.subplots(nrows=plot_count,ncols=1,sharex=True)
         fig.suptitle(' AudioVis EEG Data in ICA Source Space', fontsize=18)
         
-        for channel_index, channel_name in enumerate(sources_to_plot):
-            source_activity = np.matmul(unmixing_data, eeg)
-            
-            axs[channel_index].plot(eeg_time, source_activity[channel_name, :], label=channel_name)
+        for channel_index, source_int in enumerate(sources_to_plot):
+        
+            axs[channel_index].plot(eeg_time, source_activations[source_int, :], label=source_int)
             axs[channel_index].set_xlabel('Eeg time (s)')
-            axs[channel_index].set_ylabel(f'Source {channel_name} (uV)\n')
+            axs[channel_index].set_ylabel(f'Source {source_int} (uV)\n')
             axs[channel_index].set_xlim(54, 61)
     
         plt.tight_layout()    
         plt.savefig(f"plots/AudioVis_EEG_Data_Source_Space.png")
         plt.close()
         
-    return source_activity
+    return source_activations
 
 # Part 4 - 
+def remove_sources(source_activations, mixing_matrix, sources_to_remove):
+    
+    # Zero-out specific sources
+    if sources_to_remove:
+        for source in sources_to_remove:
+            source_activations[source, :] = 0
+        
+    # Transform back into electrode space
+    cleaned_eeg = np.matmul(mixing_matrix, source_activations)
+    
+    return cleaned_eeg
+
+# Part 5 - Compare reconstructions
+def compare_reconstructions(eeg, reconstructed_eeg, cleaned_eeg, fs, channels, channels_to_plot):
+    pass
         
     
     
