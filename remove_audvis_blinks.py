@@ -8,10 +8,9 @@ Dr. David Jangraw
 UPDATE Module Description:
 
 
-This module provides functions to process ...(e.g Steady State Visual Evoked Potential signals.
-The module will analyze the SSVEP data, generate predicted labels, compute accuracy and
-information tranfer rate. The module also implements function to plot a confusion matrix
-for accuracy and ITRgenerates, and predictor histograms.)
+This module provides functions to process audio visual eeg signals.
+The module will plot ICA componets, obtain souce activations from raw data, remove
+selected sources and plot and compare the reconstructed signals.
 """
 
 # Import Statements
@@ -148,7 +147,7 @@ def remove_sources(source_activations, mixing_matrix, sources_to_remove):
     # Zero-out specific sources
     if sources_to_remove:
         for source in sources_to_remove:
-            source_activations[source, :] = 0
+            source_activations[source,:] = 0
         
     # Transform back into electrode space
     cleaned_eeg = np.matmul(mixing_matrix, source_activations)
