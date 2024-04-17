@@ -23,26 +23,17 @@ import plot_topo
 
 
 def load_data(data_directory, channels_to_plot=None):
-    '''
-    This function loads audiovis data and stores it in a dictionary for easy 
-    access.
-    
-    Parameters
-    ----------
-    
-    data_directory :str
-        path to data folder.
-    channels_to_plot: list of strings
-        Optional. List of channel to plot after importing the data.
-    
-    
-    Returns
-    -------
-    data_dict : dictonary 
-         containing feilds of AudioVis data representing strings, floats, and bool, 
-         size of dictionary 1 x N where N is the amount of fields
-    
-    '''
+    """
+    Load EEG data from the specified directory.
+
+    Args:
+        data_directory (str): Path to the directory containing EEG data.
+        channels_to_plot (list or None, optional): List of channel names to plot. Defaults to None.
+
+    Returns:
+        data_dict: A dictionary containing EEG data.
+
+    """
     data_file=f'{data_directory}AudVisData.npy'
     
     # Load dictionary
@@ -70,7 +61,19 @@ def load_data(data_directory, channels_to_plot=None):
     return data_dict
 
 def plot_components(mixing_matrix, channels, components_to_plot):
-    
+    """
+    Plot independent components obtained from ICA.
+
+    Args:
+        mixing_matrix (numpy.ndarray): Mixing matrix obtained from ICA of shape (C,C)
+            where C is the number of channels.
+        channels (list): List of channel names.
+        components_to_plot (list): List of indices of components to plot.
+
+    Returns:
+        None
+
+    """
     plot_count = len(components_to_plot)
     plt.figure(figsize=(15, 8))
     for component_index, component_value in enumerate(components_to_plot):
@@ -92,7 +95,19 @@ def plot_components(mixing_matrix, channels, components_to_plot):
     
 # Part 3
 def get_sources(eeg, unmixing_data, fs, sources_to_plot):
-    
+    """
+    Project EEG data into ICA source space.
+
+    Args:
+        eeg (numpy.ndarray): EEG data of shape (N, D), where N is the number of channels and D is the number of samples.
+        unmixing_data (numpy.ndarray): Unmixing matrix obtained from ICA.
+        fs (float): Sampling frequency.
+        sources_to_plot (list or None, optional): List of indices of sources to plot. Defaults to None.
+
+    Returns:
+        source_activations (numpy.ndarray): Source activations in ICA space of shape (N, D).
+
+    """
     eeg_time = np.arange(0,len(eeg[0])*1/fs,1/fs)
     source_activations = np.matmul(unmixing_data, eeg)
     
@@ -116,7 +131,20 @@ def get_sources(eeg, unmixing_data, fs, sources_to_plot):
 
 # Part 4 - 
 def remove_sources(source_activations, mixing_matrix, sources_to_remove):
-    
+    """
+    Remove specific sources from the source activations.
+
+    Args:
+        source_activations (numpy.ndarray): Source activations in ICA space of shape (N, D), 
+        where N is the number of channels and D is the number of samples..
+        mixing_matrix (numpy.ndarray): Mixing matrix obtained from ICA of shape (N, N)
+            where N is the number of channels
+        sources_to_remove (list or None, optional): List of indices of sources to remove. Defaults to None.
+
+    Returns:
+        cleaned_eeg (numpy.ndarray): Cleaned EEG data of shape (N, D).
+
+    """
     # Zero-out specific sources
     if sources_to_remove:
         for source in sources_to_remove:
@@ -129,7 +157,21 @@ def remove_sources(source_activations, mixing_matrix, sources_to_remove):
 
 # Part 5 - Compare reconstructions
 def compare_reconstructions(eeg, reconstructed_eeg, cleaned_eeg, fs, channels, channels_to_plot):
-    
+    """
+    Compare raw EEG data, reconstructed EEG data, and cleaned EEG data.
+
+    Args:
+        eeg (numpy.ndarray): Raw EEG data of shape (N, D), where N is the number of channels and D is the number of samples.
+        reconstructed_eeg (numpy.ndarray): Reconstructed EEG data of shape (N, D).
+        cleaned_eeg (numpy.ndarray): Cleaned EEG data of shape (N, D).
+        fs (float): Sampling frequency.
+        channels (list): List of channel names.
+        channels_to_plot (list): List of channel names to plot.
+
+    Returns:
+        None
+
+    """
     eeg_time = np.arange(0,len(eeg[0])*1/fs,1/fs)
     
     plot_count = len(channels_to_plot)
